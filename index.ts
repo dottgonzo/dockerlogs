@@ -1,4 +1,4 @@
-import * as Promise from "bluebird"
+import * as Promise from "bluebird";
 import merge = require("json-add");
 import timerdaemon = require("timerdaemon");
 
@@ -92,10 +92,10 @@ class Docker {
 
     }
 
-    stream(cb,options?: IstreamOpt) {
+    stream(cb, options?: IstreamOpt) {
 
 
-        let that=this;
+        let that = this;
 
         if (options) {
 
@@ -103,16 +103,16 @@ class Docker {
 
         }
 
- timerdaemon.pre(5000,function(){
-     that.data().then(function(data){
-         
-             cb(data) 
-         
-     })
+        timerdaemon.pre(5000, function() {
+            that.data().then(function(data) {
 
-     
- })
- 
+                cb(data)
+
+            })
+
+
+        })
+
 
 
 
