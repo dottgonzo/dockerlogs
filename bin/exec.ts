@@ -7,4 +7,9 @@ Docker.data().then(function(data){
     console.log(data);
 }).catch(function(err){
     console.error(err);
+});
+
+Docker.stream(function(data){
+    console.log(data)
+    
 })
