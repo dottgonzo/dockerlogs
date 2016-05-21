@@ -1,4 +1,4 @@
-import * as bluebird from "bluebird"
+import * as Promise from "bluebird"
 import merge = require("json-add");
 import timerdaemon = require("timerdaemon");
 
