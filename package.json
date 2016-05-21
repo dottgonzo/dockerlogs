@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.0",
-    "json-add": "0.0.10"
+    "json-add": "0.0.10",
+    "timerdaemon": "0.0.4"
   }
 }

@@ -1,5 +1,6 @@
 import * as bluebird from "bluebird"
 import merge = require("json-add");
+import timerdaemon = require("timerdaemon");
 
 import * as child_process from "child_process"
 
@@ -91,15 +92,24 @@ class Docker {
 
     }
 
-    stream(options?: IstreamOpt) {
+    stream(cb,options?: IstreamOpt) {
 
 
+        
 
         if (options) {
 
         } else {
 
         }
+
+ timerdaemon.pre(5000,function(data){
+     
+     cb(data)
+     
+ })
+ 
+
 
 
     }
