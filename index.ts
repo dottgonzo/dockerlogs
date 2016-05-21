@@ -28,7 +28,7 @@ function getData(opt) {
             } else if (stdout) {
 
                 if (stdout) {
-                    resolve(stdout);
+                    resolve(JSON.parse(stdout));
                 } else {
 
                     reject("malformed answer")
