@@ -35,7 +35,8 @@ function getData(opt) {
                 }
 
             }
-            console.log(stdout);
+
+            
 
         })
 
