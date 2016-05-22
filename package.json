@@ -1,6 +1,6 @@
 {
   "name": "dockerlogs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "node log daemon for docker",
   "main": "index.js",
   "scripts": {
