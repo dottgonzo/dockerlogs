@@ -24,7 +24,7 @@ function getData(opt) {
     return new Promise(function(resolve, reject) {
         exec("docker inspect $(docker ps | awk '{print$1}'|grep -v CONTAINER)", function(err, stdout, stderr) {
             if (err) {
-
+console.log(err)
             } else if (stdout) {
 
                 if (stdout) {
