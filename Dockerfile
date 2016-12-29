@@ -1,5 +1,5 @@
 FROM dottgonzo/nodealpine
-RUN apk add docker git
+RUN apk update && apk add docker
 COPY ./bin /app/bin
 COPY ./index.js /app/
 COPY ./package.json /app/
