@@ -4,7 +4,8 @@
   "description": "node log daemon for docker",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start":"node bin/exec"
   },
   "repository": {
     "type": "git",
