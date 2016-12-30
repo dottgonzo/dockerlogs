@@ -1,11 +1,11 @@
 {
   "name": "dockerlogs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "node log daemon for docker",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start":"node bin/exec"
+    "start": "node bin/exec"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "dependencies": {
     "bluebird": "^3.4.0",
     "json-add": "0.0.10",
+    "lodash": "^4.17.3",
     "timerdaemon": "0.0.4"
   }
 }
