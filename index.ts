@@ -25,42 +25,42 @@ interface IstreamOpt {
 function checkstack(hostNodes) {
 
 
-    const stacks=[];
-        _.map(hostNodes, function (container) {
-
-            
-            var compose_label = container.Config.Labels["com.docker.compose.project"];
-
-            
-            var exists = false;
-            _.map(stacks, function (stack) {
-                if (compose_label === stack.label) {
-                    exists = true;
-                    stack.containers.push(container)
-                }
+    const stacks = [];
+    _.map(hostNodes, function (container) {
 
 
-
-            })
-
-            if (!exists) {
-                stacks.push({ label: compose_label, containers: [container] })
+        var compose_label = container.Config.Labels["com.docker.compose.project"];
 
 
+        var exists = false;
+        _.map(stacks, function (stack) {
+            if (compose_label === stack.label) {
+                exists = true;
+                stack.containers.push(container)
             }
-
 
 
 
         })
 
+        if (!exists) {
+            stacks.push({ label: compose_label, containers: [container] })
+
+
+        }
+
+
+
+
+    })
 
 
 
 
 
 
-    
+
+
 
     return stacks
 }
@@ -68,15 +68,20 @@ function checkstack(hostNodes) {
 
 function getData(opt) {
 
-    return new Promise(function(resolve, reject) {
-        exec("docker inspect $(docker ps | awk '{print$1}'|grep -v CONTAINER)", function(err, stdout, stderr) {
+    return new Promise(function (resolve, reject) {
+        exec("docker inspect $(docker ps | awk '{print$1}'|grep -v CONTAINER)", function (err, stdout, stderr) {
             if (err) {
-console.log(err)
+                console.log(err)
             } else if (stdout) {
 
                 if (stdout) {
-                    
-                    resolve(checkstack(JSON.parse(stdout)));
+
+                    const obj = {
+                        containers: JSON.parse(stdout),
+                        stacks: checkstack(JSON.parse(stdout))
+                    }
+
+                    resolve(obj);
                 } else {
 
                     reject("malformed answer")
@@ -84,7 +89,7 @@ console.log(err)
 
             }
 
-            
+
 
         })
 
@@ -152,8 +157,8 @@ class Docker {
 
         }
 
-        timerdaemon.pre(5000, function() {
-            that.data().then(function(data) {
+        timerdaemon.pre(5000, function () {
+            that.data().then(function (data) {
 
                 cb(data)
 
