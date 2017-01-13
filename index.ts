@@ -120,8 +120,7 @@ export class Dockerlogs {
         this.composeVersion = execSync("docker-compose -v | grep compose | awk '{print$3}' | sed 's/,//g'").toString("utf-8").replace('\n', '');
 
 
-        let configuration: IDockerConf = {
-
+        const configuration: IDockerConf = {
         };
 
         if (conf) {
