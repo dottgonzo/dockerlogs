@@ -22,7 +22,7 @@ interface IstreamOpt {
 
 
 interface ILogStack {
-    label: string;
+    label: string
     containers: IDocker[]
 }
 
@@ -49,17 +49,11 @@ function checkstack(hostNodes: IDocker[]): ILogStack[] {
                 exists = true;
                 stack.containers.push(container)
             }
-
-
-
         })
 
         if (!exists) {
             stacks.push({ label: compose_label, containers: [container] })
         }
-
-
-
 
     })
 
@@ -82,27 +76,24 @@ function getData() {
 
                         const DockerContainers: IDocker[] = JSON.parse(stdout)
 
-                        const obj = {
-                            containers: DockerContainers,
-                            stacks: checkstack(DockerContainers)
-                        }
-
-                        resolve(obj);
+                        resolve(
+                            {
+                                containers: DockerContainers,
+                                stacks: checkstack(DockerContainers)
+                            }
+                        )
                     } else {
 
                         reject("malformed json docker logs")
                     }
                 })
             } else if (stdout && parseInt(stdout) && parseInt(stdout) === 1) {
-
-                const obj = {
-                    containers: [],
-                    stacks: []
-                }
-
-                resolve(obj);
-
-
+                resolve(
+                    {
+                        containers: [],
+                        stacks: []
+                    }
+                )
             } else {
 
                 reject("malformed answer")
@@ -115,35 +106,35 @@ function getData() {
 export class Dockerlogs {
 
     options: IDockerConf
-    dockerVersion: string;
-    composeVersion: string;
-    apiVersion: string;
-    stacks: {};
+    dockerVersion: string
+    composeVersion: string
+    apiVersion: string
+    stacks: {}
 
     constructor(conf?: IDockerConf) {
         this.apiVersion = require("./package.json").version;
-        this.dockerVersion = execSync("docker -v | grep version | awk '{print$3}' | sed 's/,//g'").toString("utf-8").replace('\n', '');
+        this.dockerVersion = execSync("docker -v | grep version | awk '{print$3}' | sed 's/,//g'").toString("utf-8").replace('\n', '')
 
-        this.composeVersion = execSync("docker-compose -v | grep compose | awk '{print$3}' | sed 's/,//g'").toString("utf-8").replace('\n', '');
+        this.composeVersion = execSync("docker-compose -v | grep compose | awk '{print$3}' | sed 's/,//g'").toString("utf-8").replace('\n', '')
 
 
         const configuration: IDockerConf = {
-        };
+        }
 
         if (conf) {
 
-            Object['assign'](configuration, conf);
+            Object['assign'](configuration, conf)
 
         }
 
-        this.options = configuration;
+        this.options = configuration
 
     }
 
     data(options?: IdataOpt) {
 
 
-        let opt;
+        let opt
 
         if (options) {
 
@@ -155,12 +146,12 @@ export class Dockerlogs {
 
 
 
-        return getData();
+        return getData()
 
     }
 
     stream(cb, options?: IstreamOpt) {
-        const that = this;
+        const that = this
 
         function doit() {
             that.data().then(function (data) {
