@@ -1,6 +1,6 @@
-import docker=require("../index");
+import {Dockerlogs} from "../index"
 
-let Docker=new docker();
+const Docker=new Dockerlogs();
 
 console.log(Docker.dockerVersion)
 Docker.data().then(function(data){

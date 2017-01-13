@@ -105,7 +105,7 @@ function getData(opt) {
     })
 }
 
-class Docker {
+export class Dockerlogs {
 
     options: IDockerConf
     dockerVersion: string;
@@ -185,5 +185,5 @@ class Docker {
 }
 
 
-export = Docker
+
 
