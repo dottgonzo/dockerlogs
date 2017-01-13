@@ -1,6 +1,5 @@
 import * as Promise from "bluebird";
-import merge = require("json-add");
-import timerdaemon = require("timerdaemon");
+
 
 import * as child_process from "child_process"
 import * as _ from "lodash"
@@ -26,7 +25,7 @@ function checkstack(hostNodes) {
 
 
     const stacks = [];
-    _.map(hostNodes, function (container) {
+    _.map(hostNodes, function (container: any) {
 
 
         var compose_label = container.Config.Labels["com.docker.compose.project"];
@@ -69,33 +68,41 @@ function checkstack(hostNodes) {
 function getData(opt) {
 
     return new Promise(function (resolve, reject) {
-        exec("docker inspect $(docker ps | awk '{print$1}'|grep -v CONTAINER)", function (err, stdout, stderr) {
+        exec("docker ps | grep -c ''", function (err, stdout, stderr) {
             if (err) {
-                console.log(err)
-            } else if (stdout) {
+                reject(err)
+            } else if (stdout && parseInt(stdout) && parseInt(stdout) > 1) {
+                console.log(parseInt(stdout))
+                exec("docker inspect $(docker ps | awk '{print$1}'|grep -v CONTAINER)", function (err, stdout, stderr) {
+                    if (err) {
+                        console.log(err)
+                    } else if (stdout) {
 
-                if (stdout) {
 
-                    const obj = {
-                        containers: JSON.parse(stdout),
-                        stacks: checkstack(JSON.parse(stdout))
+                        const obj = {
+                            containers: JSON.parse(stdout),
+                            stacks: checkstack(JSON.parse(stdout))
+                        }
+
+                        resolve(obj);
+                    } else {
+
+                        reject("malformed json docker logs")
                     }
+                })
+            } else if (stdout && parseInt(stdout) && parseInt(stdout) === 1) {
 
-                    resolve(obj);
-                } else {
 
-                    reject("malformed answer")
-                }
+                        resolve([]);
 
+
+            } else {
+
+                reject("malformed answer")
             }
 
-
-
         })
-
-
     })
-
 }
 
 class Docker {
@@ -119,7 +126,7 @@ class Docker {
 
         if (conf) {
 
-            merge(configuration, conf);
+            Object['assign'](configuration, conf);
 
         }
 
@@ -147,9 +154,16 @@ class Docker {
     }
 
     stream(cb, options?: IstreamOpt) {
+        const that = this;
 
+        function doit() {
+            that.data().then(function (data) {
 
-        let that = this;
+                cb(data)
+
+            })
+        }
+
 
         if (options) {
 
@@ -157,18 +171,13 @@ class Docker {
 
         }
 
-        timerdaemon.pre(5000, function () {
-            that.data().then(function (data) {
-
-                cb(data)
-
-            })
 
 
-        })
+        setInterval(() => {
+            doit()
+        }, 5000)
 
-
-
+        doit()
 
     }
 

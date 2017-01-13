@@ -9,7 +9,3 @@ Docker.data().then(function(data){
     console.error(err);
 });
 
-Docker.stream(function(data){
-    console.log(data)
-    
-})

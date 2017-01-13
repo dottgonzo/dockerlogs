@@ -12,7 +12,7 @@ var prompt = require('gulp-prompt');
 var git = require('gulp-git');
 
 gulp.task('quickpatch', ['pushPatch'], function (done) {
-  spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
+    spawn('npm', ['publish'], { stdio: 'inherit' }).on('close', done);
 });
 
 gulp.task('bumpPatch', function () {
@@ -40,19 +40,19 @@ gulp.task('pushPatch', ['Addbumped'], function () {
 gulp.task('test', function (done) {
     return gulp.src('test/**/*.js', { read: false })
         .pipe(mocha({ reporter: 'spec' }).on('error', function (err) {
-     throw err;
-   }).on('close', function () {
-        process.exit(-1);
-   }));
+            throw err;
+        }).on('close', function () {
+            process.exit(-1);
+        }));
 });
 
 gulp.task('build', function () {
     var tsResult = tsProject.src() // instead of gulp.src(...)
         .pipe(sourcemaps.init()) // This means sourcemaps will be generated 
 
-        .pipe(ts(tsProject, {
+        .pipe(tsProject({
             sortOutput: true,
-					   }));
+        }));
 
     return tsResult
         .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file 
