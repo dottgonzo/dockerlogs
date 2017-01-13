@@ -1,5 +1,5 @@
 export interface IDocker {
-        Config: {
+    Config: {
         Labels: {}
     }
 }
