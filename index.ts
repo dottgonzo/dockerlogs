@@ -1,11 +1,11 @@
 import * as Promise from "bluebird";
 
 
-import * as child_process from "child_process"
+import { exec, execSync } from "child_process"
 import * as _ from "lodash"
 
-let execSync = child_process.execSync;
-let exec = child_process.exec;
+import { IDocker } from "./dockertyped"
+
 
 interface IDockerConf {
 
@@ -21,17 +21,29 @@ interface IstreamOpt {
 
 
 
-function checkstack(hostNodes) {
+interface ILogStack {
+    label: string;
+    containers: IDocker[]
+}
+
+interface ILogs {
+
+    containers: IDocker[]
+    stacks: ILogStack[]
+
+}
+
+function checkstack(hostNodes: IDocker[]): ILogStack[] {
 
 
-    const stacks = [];
-    _.map(hostNodes, function (container: any) {
+    const stacks: ILogStack[] = [];
+    _.map(hostNodes, function (container) {
 
 
-        var compose_label = container.Config.Labels["com.docker.compose.project"];
+        const compose_label = container.Config.Labels["com.docker.compose.project"];
 
 
-        var exists = false;
+        let exists = false;
         _.map(stacks, function (stack) {
             if (compose_label === stack.label) {
                 exists = true;
@@ -44,8 +56,6 @@ function checkstack(hostNodes) {
 
         if (!exists) {
             stacks.push({ label: compose_label, containers: [container] })
-
-
         }
 
 
@@ -53,21 +63,13 @@ function checkstack(hostNodes) {
 
     })
 
-
-
-
-
-
-
-
-
     return stacks
 }
 
 
-function getData(opt) {
+function getData() {
 
-    return new Promise(function (resolve, reject) {
+    return new Promise<ILogs>(function (resolve, reject) {
         exec("docker ps | grep -c ''", function (err, stdout, stderr) {
             if (err) {
                 reject(err)
@@ -78,10 +80,11 @@ function getData(opt) {
                         console.log(err)
                     } else if (stdout) {
 
+                        const DockerContainers: IDocker[] = JSON.parse(stdout)
 
                         const obj = {
-                            containers: JSON.parse(stdout),
-                            stacks: checkstack(JSON.parse(stdout))
+                            containers: DockerContainers,
+                            stacks: checkstack(DockerContainers)
                         }
 
                         resolve(obj);
@@ -92,8 +95,12 @@ function getData(opt) {
                 })
             } else if (stdout && parseInt(stdout) && parseInt(stdout) === 1) {
 
+                const obj = {
+                    containers: [],
+                    stacks: []
+                }
 
-                        resolve([]);
+                resolve(obj);
 
 
             } else {
@@ -148,7 +155,7 @@ export class Dockerlogs {
 
 
 
-        return getData(opt);
+        return getData();
 
     }
 
